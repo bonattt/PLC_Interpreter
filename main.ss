@@ -11,6 +11,10 @@
     (load "parse.ss")
     (load "env.ss")
     (load "interpreter.ss")
+    (load "datatypes.ss")
+    (load "parse.ss")
+    (load "env.ss")
+    (load "interpreter.ss")
     ; (load "A13-test-code.ss"))
   ))
 

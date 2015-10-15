@@ -24,7 +24,7 @@
      [let-exp (vars (list-of symbol?)) (vals (list-of expression?))
            (body (list-of expression?)) ]
 
-     [lambda-exp (id lambda-helper)
+     [lambda-exp (id (list-of symbol?))
               (body (list-of expression?))]
 )
 
@@ -33,9 +33,8 @@
 ; kind of procedure, but more kinds will be added later.
 
 (define-datatype proc-val proc-val?
-  [prim-proc
-   (name symbol?)]
-   [closure (vars (list-of symbol?)) (bodies (list-of expression?)) (env environment)]
+  [prim-proc  (name symbol?)]
+  [closure    (vars (list-of symbol?)) (body (list-of expression?)) (env environment?)]
 )
 	 
 	 
@@ -52,3 +51,6 @@
    (syms (list-of symbol?))
    (vals (list-of scheme-value?))
    (env environment?)))
+
+
+
