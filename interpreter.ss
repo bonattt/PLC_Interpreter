@@ -3,7 +3,7 @@
 (define *prim-proc-names* '(+ - * add1 sub1 cons = / not zero? car cdr list null?
               assq eq? equal? atom? length list->vector list? pair?
               procedure? vector->list vector vector? number? symbol?
-              caar cadr cadar >= make-vector vector-ref set-car! set-cdr!))
+              caar cadr cadar >= make-vector vector-ref set-car! set-cdr! display newline))
 
 (define init-env         ; for now, our initial global environment only contains 
   (extend-env            ; procedure names.  Recall that an environment associates
@@ -123,10 +123,13 @@
       [(cadar) (cadar (car args))]
       [(>=) (>= (car args) (cadr args))]
 	  
-	    [(make-vector) (make-vector (car args))]
-	    [(vector-ref) (vector-ref (car args) (cadr args))]
-	    [(set-car!) (set-car! (car args) (cadr args))]
-	    [(set-cdr!) (set-cdr! (car args) (cadr args))]
+	  [(make-vector) (make-vector (car args))]
+	  [(vector-ref) (vector-ref (car args) (cadr args))]
+	  [(set-car!) (set-car! (car args) (cadr args))]
+	  [(set-cdr!) (set-cdr! (car args) (cadr args))]
+	  [(display) (display (car args))]
+	  [(newline) (newline)]
+	
 
       [else (error 'apply-prim-proc 
             "Bad primitive procedure name: ~s" 
