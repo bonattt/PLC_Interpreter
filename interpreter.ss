@@ -112,7 +112,7 @@
       [(list->vector) (list->vector (car args))]
       [(list?) (list? (car args))]
       [(pair?) (pair? (car args))]
-      [(procedure?) (proc-val? (car args))]			; TODO: Fix this. fails just this TC for primitives.
+      [(procedure?) (proc-val? (car args))]			
       [(vector->list) (vector->list (car args))]
       [(vector) (vector (car args))]
       [(vector?) (vector? (car args))]
@@ -122,6 +122,8 @@
       [(cadr) (cadr (car args))]
       [(cadar) (cadar (car args))]
       [(>=) (>= (car args) (cadr args))]
+      [(display) (display args)]
+      [(newline) (newline)]
 	  
 	    [(make-vector) (make-vector (car args))]
 	    [(vector-ref) (vector-ref (car args) (cadr args))]
