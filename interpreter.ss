@@ -122,14 +122,12 @@
       [(cadr) (cadr (car args))]
       [(cadar) (cadar (car args))]
       [(>=) (>= (car args) (cadr args))]
-      [(display) (display args)]
-      [(newline) (newline)]
 	  
 	  [(make-vector) (make-vector (car args))]
 	  [(vector-ref) (vector-ref (car args) (cadr args))]
 	  [(set-car!) (set-car! (car args) (cadr args))]
 	  [(set-cdr!) (set-cdr! (car args) (cadr args))]
-	  [(display) (display (car args))]
+	  [(display) (display args)]
 	  [(newline) (newline)]
 	
 
