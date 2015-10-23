@@ -3,7 +3,8 @@
 (define *prim-proc-names* '(+ - * add1 sub1 cons = / not zero? car cdr list null?
               assq eq? equal? atom? length list->vector list? pair?
               procedure? vector->list vector vector? number? symbol?
-              caar cadr cadar >= <= > < make-vector vector-ref set-car! set-cdr! display newline))
+              caar cadr cadar >= <= > < make-vector vector-ref set-car! set-cdr! display newline
+              map apply))
 
 (define init-env         ; for now, our initial global environment only contains 
   (extend-env            ; procedure names.  Recall that an environment associates
@@ -25,8 +26,7 @@
   (lambda (exp env)
     (cases expression exp
       	[lit-exp (datum) datum]
-		[while-exp (test-exp bodies)
-			(eval-while test-exp bodies env)]
+
       	[var-exp (id)
 				    (apply-env env id; look up its value.
       	  	  (lambda (x) x) ; procedure to call if id is in the environment 
@@ -53,6 +53,9 @@
 
         [lambda-exp (id body) 
             (closure id body env)]
+
+        [while-exp (test-exp bodies)
+			(eval-while test-exp bodies env)]
         
       	[else (eopl:error 'eval-exp "Bad abstract syntax: ~a" exp)])))
 
@@ -64,7 +67,8 @@
 			(begin
 				(eval-in-order bodies env)
 				(eval-while test-exp bodies env)
-			))))
+			)
+			#t)))
 
 (define eval-in-order
       (lambda (body env)
@@ -124,7 +128,7 @@
       [(pair?) (pair? (car args))]
       [(procedure?) (proc-val? (car args))]			
       [(vector->list) (vector->list (car args))]
-      [(vector) (vector (car args))]
+      [(vector) (apply vector args)]
       [(vector?) (vector? (car args))]
       [(number?) (number? (car args))]
       [(symbol?) (symbol? (car args))]
@@ -135,6 +139,9 @@
       [(<=) (<= (car args) (cadr args))]
       [(>) (> (car args) (cadr args))]
       [(<) (< (car args) (cadr args))]
+
+      [(map) (map (lambda (x) (apply-proc (car args) (list x))) (cadr args))]
+      [(apply) (apply-proc (car args) (cadr args))]
 	  
 	  
 	  [(make-vector) (make-vector (car args))]
@@ -160,8 +167,6 @@
 
 (define eval-one-exp
   (lambda (x) (top-level-eval (parse-exp x))))
-
-
 
 
 

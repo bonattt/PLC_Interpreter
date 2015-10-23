@@ -95,33 +95,33 @@
       [else #f])))
 
 
-(define-datatype expression expression?
-    [var-exp (id symbol?)]
-    [app-exp (rator expression?)
-           (rand (list-of expression?)) ]
-	[while-exp
-		(test-exp expression?)
-		(bodies list?)]
-    [if-exp (condition expression?)
-          (body expression?)]
-    [if-else-exp (condition expression?)
-               (body1 expression?)
-               (body2 expression?)]
-    [lit-exp (id lit2?)]
-    [lambda-exp (id lambda-helper)
-              (body (list-of expression?))]
-    [let-exp (vars (list-of symbol?)) (vals (list-of expression?))
-           (body (list-of expression?)) ]
-    [let*-exp (vars (list-of symbol?)) (vals (list-of expression?))
-            (body (list-of expression?))]
-    [letrec-exp (vars (list-of symbol?)) (vals (list-of expression?))
-              (body (list-of expression?))]
-    [named-let-exp (id symbol?)
-                 (vars (list-of symbol?)) (vals (list-of expression?))
-                 (body (list-of expression?))]
-    [set!-exp  (id symbol?)
-             (body expression?)]
-    [vec-exp (id vector?)])
+; (define-datatype expression expression?
+;     [var-exp (id symbol?)]
+;     [app-exp (rator expression?)
+;            (rand (list-of expression?)) ]
+; 	[while-exp
+; 		(test-exp expression?)
+; 		(bodies list?)]
+;     [if-exp (condition expression?)
+;           (body expression?)]
+;     [if-else-exp (condition expression?)
+;                (body1 expression?)
+;                (body2 expression?)]
+;     [lit-exp (id lit2?)]
+;     [lambda-exp (id lambda-helper)
+;               (body (list-of expression?))]
+;     [let-exp (vars (list-of symbol?)) (vals (list-of expression?))
+;            (body (list-of expression?)) ]
+;     [let*-exp (vars (list-of symbol?)) (vals (list-of expression?))
+;             (body (list-of expression?))]
+;     [letrec-exp (vars (list-of symbol?)) (vals (list-of expression?))
+;               (body (list-of expression?))]
+;     [named-let-exp (id symbol?)
+;                  (vars (list-of symbol?)) (vals (list-of expression?))
+;                  (body (list-of expression?))]
+;     [set!-exp  (id symbol?)
+;              (body expression?)]
+;     [vec-exp (id vector?)])
 
 
 (define lambda-helper
