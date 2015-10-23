@@ -3,7 +3,7 @@
 (define *prim-proc-names* '(+ - * add1 sub1 cons = / not zero? car cdr list null?
               assq eq? equal? atom? length list->vector list? pair?
               procedure? vector->list vector vector? number? symbol?
-              caar cadr cadar >= make-vector vector-ref set-car! set-cdr! display newline))
+              caar cadr cadar >= <= > < make-vector vector-ref set-car! set-cdr! display newline))
 
 (define init-env         ; for now, our initial global environment only contains 
   (extend-env            ; procedure names.  Recall that an environment associates
@@ -25,6 +25,8 @@
   (lambda (exp env)
     (cases expression exp
       	[lit-exp (datum) datum]
+		[while-exp (test-exp bodies)
+			(eval-while test-exp bodies env)]
       	[var-exp (id)
 				    (apply-env env id; look up its value.
       	  	  (lambda (x) x) ; procedure to call if id is in the environment 
@@ -55,6 +57,14 @@
       	[else (eopl:error 'eval-exp "Bad abstract syntax: ~a" exp)])))
 
 ; evaluate the list of operands, putting results into a list
+
+(define eval-while
+	(lambda (test-exp bodies env)
+		(if (eval-exp test-exp env)
+			(begin
+				(eval-in-order bodies env)
+				(eval-while test-exp bodies env)
+			))))
 
 (define eval-in-order
       (lambda (body env)
@@ -122,6 +132,10 @@
       [(cadr) (cadr (car args))]
       [(cadar) (cadar (car args))]
       [(>=) (>= (car args) (cadr args))]
+      [(<=) (<= (car args) (cadr args))]
+      [(>) (> (car args) (cadr args))]
+      [(<) (< (car args) (cadr args))]
+	  
 	  
 	  [(make-vector) (make-vector (car args))]
 	  [(vector-ref) (vector-ref (car args) (cadr args))]

@@ -15,6 +15,7 @@
           (cond
               [(not (list? datum)) (eopl:error 'parse-exp "The expression ~s is not a list" datum)]
               [(equal? (car datum) 'lambda) (parse-lambda datum)]
+              [(equal? (car datum) 'while) (parse-while datum)]
               [(equal? (car datum) 'if) (parse-if datum)]
               [(equal? (car datum) 'let) (parse-let datum)]
               [(equal? (car datum) 'let*) (parse-let* datum)]
@@ -26,6 +27,9 @@
         [(lit2? datum) (lit-exp datum)]
     [else (eopl:error 'parse-exp "bad expression: ~s" datum)])))
 
+(define parse-while
+	(lambda (datum)
+		(while-exp (parse-exp (cadr datum)) (map parse-exp (cddr datum)))))
 
 (define parse-lambda
   (lambda (datum)
@@ -95,9 +99,12 @@
     [var-exp (id symbol?)]
     [app-exp (rator expression?)
            (rand (list-of expression?)) ]
+	[while-exp
+		(test-exp expression?)
+		(bodies list?)]
     [if-exp (condition expression?)
           (body expression?)]
-  [if-else-exp (condition expression?)
+    [if-else-exp (condition expression?)
                (body1 expression?)
                (body2 expression?)]
     [lit-exp (id lit2?)]
@@ -133,6 +140,7 @@
   (lambda (datum)
     (cases expression datum
       [var-exp (var) var]
+	  [while-exp (test-exp bodies) (cons 'while (cons (unparse-exp test-exp) (map unparse-exp bodies)))]
       [lambda-exp (id body) (cons* 'lambda id (map unparse-exp body))]
       [if-exp (condition body) (list 'if (unparse-exp condition) (unparse-exp body))]
       [if-else-exp (condition body1 body2) (list 'if (unparse-exp condition) (unparse-exp body1) (unparse-exp body2))]
