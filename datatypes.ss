@@ -14,8 +14,16 @@
                (body1 expression?)
                (body2 expression?)]
     [lit-exp (id lit2?)]
-    [lambda-exp (id lambda-helper)
-              (body (list-of expression?))]
+    [lambda-exp
+		(id (list-of symbol?))
+		(body (list-of expression?))]
+	[lambda-dot-exp
+		(id (list-of symbol?))
+		(arbitrary-id symbol?)
+		(body (list-of expression?))]
+	[lambda-arbitrary-exp
+		(id symbol?)
+		(body (list-of expression?))]
     [let-exp (vars (list-of symbol?)) (vals (list-of expression?))
            (body (list-of expression?)) ]
     [let*-exp (vars (list-of symbol?)) (vals (list-of expression?))

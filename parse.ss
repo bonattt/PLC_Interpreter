@@ -34,12 +34,33 @@
 (define parse-lambda
   (lambda (datum)
     (cond
-      [(< (length datum) 3) (eopl:error 'parse-exp "length error ~s" datum)]
+      [(< (length datum) 3) (eopl:error 'parse-exp "lambda expression missing required arguments ~s" datum)]
 
-      [(symbol? (2nd datum)) (lambda-exp (2nd datum) (map parse-exp (cddr datum)))]
-      [(andmap symbol? (2nd datum)) (lambda-exp (2nd datum) (map parse-exp (cddr datum)))]
+      [(symbol? (cadr datum)) (lambda-arbitrary-exp (2nd datum) (map parse-exp (cddr datum)))]
+      [(lambda-has-arbitrary-args? (cadr datum)) (lambda-dot-exp (lambda-dot-args (cadr datum)) (lambda-dot-id (cadr datum)) (map parse-exp (cddr datum)))]
+	  [((list-of symbol?) (cadr datum)) (lambda-exp (cadr datum) (map parse-exp (cddr datum)))]
+	  
+	  ;[(andmap symbol? (2nd datum)) (lambda-exp (2nd datum) (map parse-exp (cddr datum)))]
       ; [(or (null? (2nd datum)) (symbol? (2nd datum)) (pair? (2nd datum))) (lambda-exp (2nd datum) (map parse-exp (cddr datum)))] 
       [else (eopl:error 'parse-exp "invalid arguments for lambda ~s" (2nd datum))])))
+	  
+(define lambda-has-arbitrary-args?
+	(lambda (args)
+			(and (pair? args) (not (list? args)))
+		))
+(define lambda-dot-id
+	(lambda (args)
+		(if (pair? (cdr args))
+			(lambda-arbitrary-id (cdr args))
+			(cdr args)
+		)))
+		
+(define lambda-dot-args
+	(lambda (args)
+		(if (symbol? (cdr args))
+			(list (car args))
+			(cons (car args) (lambda-dot-args (cdr args)))
+		)))
 
 (define parse-if
   (lambda (datum)
@@ -95,9 +116,9 @@
       [else #f])))
 
 
-(define lambda-helper
-  (lambda (x)
-    (or (null? x) (symbol? x) (pair? x))))
+;(define lambda-helper
+;  (lambda (x)
+;    (or (null? x) (symbol? x) (pair? x))))
 
 
 (define lit2? 
@@ -110,6 +131,8 @@
 (define unparse-exp
   (lambda (datum)
     (cases expression datum
+	  [lambda-dot-exp (id arbitrary-id body) (cons 'lambda (cons (fold-right cons arbitrary-id id) (map unparse-exp body)))]
+	  [lambda-arbitrary-exp (id body) (cons 'lambda (cons id (map unparse-exp body)))]
       [var-exp (var) var]
 	  [while-exp (test-exp bodies) (cons 'while (cons (unparse-exp test-exp) (map unparse-exp bodies)))]
       [lambda-exp (id body) (cons* 'lambda id (map unparse-exp body))]
