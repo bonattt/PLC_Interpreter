@@ -4,7 +4,7 @@
               assq eq? equal? atom? length list->vector list? pair?
               procedure? vector->list vector vector? number? symbol?
               caar cadr cadar >= <= > < make-vector vector-ref set-car! set-cdr! display newline
-              map apply))
+              map apply quotient))
 
 (define init-env         ; for now, our initial global environment only contains 
   (extend-env            ; procedure names.  Recall that an environment associates
@@ -59,6 +59,8 @@
 			
 		[lambda-arbitrary-exp (id body)
             (arb-closure id body env)]
+
+        [lambda-arbitrary-exp (id body) (closure id body env)]
 
         [while-exp (test-exp bodies)
 			(eval-while test-exp bodies env)]
@@ -115,6 +117,23 @@
                     proc-value)])))
 
 
+(define syntax-expand
+	(lambda (exp)
+		(cases expression exp
+			[lit-exp (datum) exp]
+			[var-exp (id) exp]
+			[if-exp (condition body) (if-exp (syntax-expand condition) (map syntax-expand body))]
+			[if-else-exp (condition body1 body2) 
+				(if-else-exp (syntax-expand condition) (map syntax-expand body1) (syntax-expand body2))]
+			[lambda-exp (id body) (lambda-exp id (map syntax-expand body))]
+			[let-exp (vars vals body)
+				(app-exp (lambda-exp vars (map syntax-expand body)) (map syntax-expand vals))]
+
+			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
+			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
+			)))
+
+
 
 ; Usually an interpreter must define each 
 ; built-in procedure individually.  We are "cheating" a little bit.
@@ -158,6 +177,7 @@
       [(<=) (<= (car args) (cadr args))]
       [(>) (> (car args) (cadr args))]
       [(<) (< (car args) (cadr args))]
+      [(quotient) (quotient (car args) (cadr args))]
 
       [(map) (map (lambda (x) (apply-proc (car args) (list x))) (cadr args))]
       [(apply) (apply-proc (car args) (cadr args))]
