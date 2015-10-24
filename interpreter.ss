@@ -132,10 +132,9 @@
 
 			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
 			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
-
+			[and-exp (args) 
 			[else exp]
 			)))
-
 
 
 ; Usually an interpreter must define each 

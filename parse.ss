@@ -20,6 +20,7 @@
               [(equal? (car datum) 'let) (parse-let datum)]
               [(equal? (car datum) 'let*) (parse-let* datum)]
               [(equal? (car datum) 'letrec) (parse-letrec datum)]
+			  [(equal? (car datum) 'and) (and-exp (map parse-exp (cdr datum)))]
               [(equal? (car datum) 'set!) (parse-set! datum)]
               [(equal? (car datum) 'quote) (lit-exp (2nd datum))]
               [else (app-exp (parse-exp (1st datum))
@@ -139,6 +140,7 @@
       [lit-exp (id) id]
       [vec-exp (id) id]
 	  [void-exp () (void)]
+	  [and-exp (args) (cons 'and (map unparse-exp args))]
       [app-exp (rator rand)
         (cons*
           (unparse-exp rator) (map unparse-exp rand))])))

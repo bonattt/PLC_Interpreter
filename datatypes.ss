@@ -2,7 +2,8 @@
 ;; Parsed expression datatypes
 
 (define-datatype expression expression?
-         [var-exp (id symbol?)]
+    [var-exp (id symbol?)]
+	[and-exp (args (list-of expression?))]
     [app-exp (rator expression?)
            (rand (list-of expression?)) ]
 	[while-exp
