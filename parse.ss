@@ -25,10 +25,18 @@
               [(equal? (car datum) 'quote) (lit-exp (2nd datum))]
               [(equal? (car datum) 'or) (parse-or datum)]
               [(equal? (car datum) 'begin) (parse-begin datum)]
+			  [(equal? (car datum) 'cond) (parse-cond (cdr datum))]
               [else (app-exp (parse-exp (1st datum))
                 (map parse-exp (cdr datum)))])]
         [(lit2? datum) (lit-exp datum)]
     [else (eopl:error 'parse-exp "bad expression: ~s" datum)])))
+
+(define parse-cond
+	(lambda(data)
+		(cond-exp
+			(map parse-exp (map car data))
+			(map parse-exp (map cadr data))
+		)))
 
 (define parse-while
 	(lambda (datum)
@@ -151,11 +159,23 @@
       [vec-exp (id) id]
 	  [void-exp () (void)]
 	  [and-exp (args) (cons 'and (map unparse-exp args))]
+	  [cond-exp (conditions bodies)
+		(cons 'cond (unparse-cond-helper conditions bodies '()))]
+	  [or-exp (body) "<unimplemented>"]
+	  [begin-exp (body) "<unimplemented>"]
       [app-exp (rator rand)
         (cons*
           (unparse-exp rator) (map unparse-exp rand))])))
 
-
+(define unparse-cond-helper
+	(lambda (conditions bodies return)
+		(if (null? conditions)
+			return
+			(unparse-cond-helper
+				(cdr conditions)
+				(cdr bodies)
+				(append (cons (unparse-exp (car conditions)) (unparse-exp (car bodies))) return)
+			))))
 
 (define unparse-let
   (lambda (vars vals ans)

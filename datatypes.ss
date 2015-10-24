@@ -5,6 +5,9 @@
     [var-exp (id symbol?)]
     [app-exp (rator expression?)
            (rand (list-of expression?)) ]
+	[cond-exp
+		(conditions (list-of expression?))
+		(bodies (list-of expression?))]
 	[while-exp
 		(test-exp expression?)
 		(bodies list?)]
