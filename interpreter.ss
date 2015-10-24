@@ -57,7 +57,8 @@
 		[lambda-dot-exp (id arbitrary-id body)
 			(dot-closure id arbitrary-id body env)]
 			
-        [lambda-arbitrary-exp (id body) (closure id body env)]
+        [lambda-arbitrary-exp (id body)
+			(arb-closure id body env)]
 
         [while-exp (test-exp bodies)
 			(eval-while test-exp bodies env)]
@@ -104,7 +105,7 @@
 		(eval-in-order bodies (dot-extend-env vars dot-var args env))]
 	  
 	  [arb-closure (arb-var bodies env)
-		(eval-in-order bodies (dot-extend-env arb-var args env))]
+		(eval-in-order bodies (extend-env (list arb-var) (list args) env))]
 		
 	  
 	  
