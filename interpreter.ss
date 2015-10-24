@@ -165,8 +165,20 @@
 
 			[begin-exp (body) (begin-exp (map syntax-expand body))]
 
+			[case-exp (key cases bodies) (expand-case-helper key cases bodies)]
+
 			[else exp]
 			)))
+
+(define expand-case-helper
+	(lambda (key cases bodies)
+		(syntax-expand (cond
+   			[(eq? 'else (car cases)) (car bodies)]
+   			[else (cons
+    			[if-exp (app-exp (var-exp 'member) (list (syntax-expand key) (app-exp (var-exp 'list)  (car cases))  ))
+            		(list (syntax-expand (car bodies)))]
+    				[expand-case-help key (cdr cases) (cdr bodies)]    )  ]
+   ))))
 
 
 ; Usually an interpreter must define each 
