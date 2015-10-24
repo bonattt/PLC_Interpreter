@@ -159,11 +159,6 @@
 			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
 			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
 
-<<<<<<< HEAD
-			; [and-exp (args) 
-
-=======
->>>>>>> 130a8e016772f503212fda5cfa8d9a164e2b1321
 			[or-exp (body) (or-exp (map syntax-expand body))]
 			
 			[and-exp (body) (and-exp (map syntax-expand body))]
