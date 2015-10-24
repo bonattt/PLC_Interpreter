@@ -24,7 +24,7 @@
 
 (define eval-exp
   (lambda (exp env)
-    (cases expression exp
+    (cases expression exp	
       	[lit-exp (datum) datum]
 
       	[var-exp (id)
@@ -53,11 +53,20 @@
 
         [lambda-exp (id body) 
             (closure id body env)]
+			
+		[lambda-dot-exp (id arbitrary-id body)
+			(dot-closure id arbitrary-id body env)]
+			
+		[lambda-arbitrary-exp (id body)
+            (arb-closure id body env)]
 
         [while-exp (test-exp bodies)
 			(eval-while test-exp bodies env)]
         
-      	[else (eopl:error 'eval-exp "Bad abstract syntax: ~a" exp)])))
+		[else '()]
+		;(error 'eval-exp  "Bad abstract syntax: ~s" exp)]
+      	;[else (eopl:error 'eval-exp "Bad abstract syntax: ~a" exp)]
+	)))
 
 ; evaluate the list of operands, putting results into a list
 
@@ -91,6 +100,16 @@
 			; You will add other cases
 
       [closure (vars bodies env) (eval-in-order bodies (extend-env vars args env))]
+	  
+	  [dot-closure (vars dot-var bodies env)
+		(eval-in-order bodies (dot-extend-env vars dot-var args env))]
+	  
+	  [arb-closure (arb-var bodies env)
+		(eval-in-order bodies (dot-extend-env arb-var args env))]
+		
+	  
+	  
+	  
       [else (error 'apply-proc
                    "Attempt to apply bad procedure: ~s" 
                     proc-value)])))

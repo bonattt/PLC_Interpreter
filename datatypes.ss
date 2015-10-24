@@ -44,6 +44,15 @@
 (define-datatype proc-val proc-val?
   [prim-proc  (name symbol?)]
   [closure    (vars (list-of symbol?)) (body (list-of expression?)) (env environment?)]
+  [dot-closure
+		(vars (list-of symbol?))
+		(dot-var symbol?)
+		(bodies (list-of expression?))
+		(env environment?)]
+  [arb-closure
+		(arb-var symbol?)
+		(bodies (list-of expression?))
+		(env environment?)]
 )
 	 
 	 
