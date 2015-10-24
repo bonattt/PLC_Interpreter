@@ -65,7 +65,7 @@
 (define parse-if
   (lambda (datum)
     (cond
-      [(= 3 (length datum)) (if-exp (parse-exp (2nd datum) (parse-exp (3rd datum))))]
+      [(= 3 (length datum)) (if-else-exp (parse-exp (2nd datum)) (parse-exp (3rd datum)) (void-exp))]
       [(= 4 (length datum)) (if-else-exp (parse-exp (2nd datum)) (parse-exp (3rd datum)) (parse-exp (cadddr datum)))]
       [else (eopl:error 'parse-exp "if statement is atleast 3 ~s" datum)])))
 
@@ -121,13 +121,6 @@
 ;    (or (null? x) (symbol? x) (pair? x))))
 
 
-(define lit2? 
-  (lambda (x)
-      (ormap 
-       (lambda (pred) (pred x))
-       (list number? vector? boolean? symbol? string? pair? null?))))
-
-
 (define unparse-exp
   (lambda (datum)
     (cases expression datum
@@ -145,6 +138,7 @@
       [set!-exp (id body) (cons* 'set! id (unparse-exp body))]
       [lit-exp (id) id]
       [vec-exp (id) id]
+	  [void-exp () (void)]
       [app-exp (rator rand)
         (cons*
           (unparse-exp rator) (map unparse-exp rand))])))

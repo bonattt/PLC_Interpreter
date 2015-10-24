@@ -35,7 +35,15 @@
                  (body (list-of expression?))]
     [set!-exp  (id symbol?)
              (body expression?)]
+	[void-exp]			 
     [vec-exp (id vector?)])
+
+(define lit2? 
+  (lambda (x)
+      (ormap 
+       (lambda (pred) (pred x))
+       (list number? vector? boolean? symbol? string? pair? null?))))
+
 
 	
 ; datatype for procedures.  At first there is only one

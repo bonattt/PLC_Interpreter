@@ -62,6 +62,9 @@
 
         [while-exp (test-exp bodies)
 			(eval-while test-exp bodies env)]
+			
+		[void-exp ()
+			(void)]
         
 		[else '()]
 		;(error 'eval-exp  "Bad abstract syntax: ~s" exp)]
