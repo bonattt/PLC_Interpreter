@@ -34,6 +34,10 @@
 	(lambda (datum)
 		(while-exp (parse-exp (cadr datum)) (map parse-exp (cddr datum)))))
 
+(define parse-begin
+	(lambda (datum)
+		(begin-exp (map parse-exp (cdr datum)))))
+
 (define parse-or
 	(lambda (datum)
 		(or-exp (map parse-exp (cdr datum)))))

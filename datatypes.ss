@@ -39,6 +39,8 @@
     [or-exp (body (list-of expression?))]
     [and-exp (args (list-of expression?))]
 
+    [begin-exp (body (list-of expression?))]
+
 	[void-exp]			 
     [vec-exp (id vector?)])
 

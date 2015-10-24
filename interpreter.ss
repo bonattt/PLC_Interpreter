@@ -67,6 +67,8 @@
 			(void)]
 
 		[or-exp (body) (eval-or body env)]
+
+		[begin-exp (body) (eval-in-order body env)]
         
 		; [else '()]
 		;(error 'eval-exp  "Bad abstract syntax: ~s" exp)]
@@ -145,9 +147,11 @@
 			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
 			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
 
-			[and-exp (args) 
+			; [and-exp (args) 
 
 			[or-exp (body) (or-exp (map syntax-expand body))]
+
+			[begin-exp (body) (begin-exp (map syntax-expand body))]
 
 			[else exp]
 			)))
