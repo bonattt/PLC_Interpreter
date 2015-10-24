@@ -42,7 +42,14 @@
     [or-exp (body (list-of expression?))]
     [and-exp (args (list-of expression?))]
 
+    [while-exp
+		(test-exp expression?)
+		(bodies list?)]
+
     [begin-exp (body (list-of expression?))]
+
+    [case-exp (key expression?) (cases (lambda (x) (map (lambda (y) (or (y (list-of expression?)) (equal? y 'else))) z)))
+    												(bodies (list-of expression?))]
 
 	[void-exp]			 
     [vec-exp (id vector?)])
