@@ -24,7 +24,7 @@
               [(equal? (car datum) 'set!) (parse-set! datum)]
               [(equal? (car datum) 'quote) (lit-exp (2nd datum))]
               [(equal? (car datum) 'or) (parse-or datum)]
-              [(equal? (car datum)) 'begin (parse-begin datum)]
+              [(equal? (car datum) 'begin) (parse-begin datum)]
               [else (app-exp (parse-exp (1st datum))
                 (map parse-exp (cdr datum)))])]
         [(lit2? datum) (lit-exp datum)]

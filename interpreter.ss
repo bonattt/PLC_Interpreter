@@ -144,13 +144,11 @@
 
 			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
 			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
-<<<<<<< Updated upstream
+
 			[and-exp (args) 
-=======
 
 			[or-exp (body) (or-exp (map syntax-expand body))]
 
->>>>>>> Stashed changes
 			[else exp]
 			)))
 
