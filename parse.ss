@@ -51,7 +51,7 @@
 (define lambda-dot-id
 	(lambda (args)
 		(if (pair? (cdr args))
-			(lambda-arbitrary-id (cdr args))
+			(lambda-dot-id (cdr args))
 			(cdr args)
 		)))
 		
