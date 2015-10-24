@@ -3,7 +3,6 @@
 
 (define-datatype expression expression?
     [var-exp (id symbol?)]
-	[and-exp (args (list-of expression?))]
     [app-exp (rator expression?)
            (rand (list-of expression?)) ]
 	[while-exp
@@ -38,6 +37,7 @@
              (body expression?)]
 
     [or-exp (body (list-of expression?))]
+    [and-exp (args (list-of expression?))]
 
 	[void-exp]			 
     [vec-exp (id vector?)])
