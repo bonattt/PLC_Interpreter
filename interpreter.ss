@@ -120,15 +120,17 @@
 		(cases expression exp
 			[lit-exp (datum) exp]
 			[var-exp (id) exp]
-			[if-exp (condition body) (if-exp (syntax-expand condition) (map syntax-expand body))]
+			[if-exp (condition body) (if-exp (syntax-expand condition) (syntax-expand body))]
 			[if-else-exp (condition body1 body2) 
-				(if-else-exp (syntax-expand condition) (map syntax-expand body1) (syntax-expand body2))]
+				(if-else-exp (syntax-expand condition) (syntax-expand body1) (syntax-expand body2))]
 			[lambda-exp (id body) (lambda-exp id (map syntax-expand body))]
 			[let-exp (vars vals body)
 				(app-exp (lambda-exp vars (map syntax-expand body)) (map syntax-expand vals))]
 
 			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
 			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
+
+			[else exp]
 			)))
 
 
@@ -197,13 +199,13 @@
   (lambda ()
     (display "--> ")
     ;; notice that we don't save changes to the environment...
-    (let ([answer (top-level-eval (parse-exp (read)))])
+    (let ([answer (top-level-eval (syntax-expand (parse-exp (read))))])
       ;; TODO: are there answers that should display differently?
       (eopl:pretty-print answer) (newline)
       (rep))))  ; tail-recursive, so stack doesn't grow.
 
 (define eval-one-exp
-  (lambda (x) (top-level-eval (parse-exp x))))
+  (lambda (x) (top-level-eval (syntax-expand (parse-exp x)))))
 
 
 
