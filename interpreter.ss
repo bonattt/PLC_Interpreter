@@ -173,11 +173,11 @@
 (define expand-case-helper
 	(lambda (key cases bodies)
 		(syntax-expand (cond
-   			[(eq? 'else (car cases)) (car bodies)]
+   			[(eq? 'else (car cases)) (list (if-exp (lit-exp #t) (list (syntax-expand (car bodies)))))]
    			[else (cons
     			[if-exp (app-exp (var-exp 'member) (list (syntax-expand key) (app-exp (var-exp 'list)  (car cases))  ))
             		(list (syntax-expand (car bodies)))]
-    				[expand-case-help key (cdr cases) (cdr bodies)]    )  ]
+    				[expand-case-help key (cdr cases) (cdr bodies)])]
    ))))
 
 

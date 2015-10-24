@@ -26,6 +26,8 @@
               [(equal? (car datum) 'or) (parse-or datum)]
               [(equal? (car datum) 'begin) (parse-begin datum)]
 			  [(equal? (car datum) 'cond) (parse-cond (cdr datum))]
+             [(equal? (car datum) 'case) (parse-case datum)]
+
               [else (app-exp (parse-exp (1st datum))
                 (map parse-exp (cdr datum)))])]
         [(lit2? datum) (lit-exp datum)]
@@ -170,8 +172,8 @@
 	  [and-exp (args) (cons 'and (map unparse-exp args))]
 	  [cond-exp (conditions bodies)
 		(cons 'cond (unparse-cond-helper conditions bodies '()))]
-	  [or-exp (body) "<unimplemented>"]
-	  [begin-exp (body) "<unimplemented>"]
+	  ;[or-exp (body) "<unimplemented>"]
+	  ;[begin-exp (body) "<unimplemented>"]
       [app-exp (rator rand)
         (cons*
           (unparse-exp rator) (map unparse-exp rand))])))

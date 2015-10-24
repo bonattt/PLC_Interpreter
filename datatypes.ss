@@ -8,9 +8,7 @@
 	[cond-exp
 		(conditions (list-of expression?))
 		(bodies (list-of expression?))]
-	[while-exp
-		(test-exp expression?)
-		(bodies list?)]
+
     [if-exp (condition expression?)
           (body expression?)]
     [if-else-exp (condition expression?)
@@ -48,7 +46,7 @@
 
     [begin-exp (body (list-of expression?))]
 
-    [case-exp (key expression?) (cases (lambda (x) (map (lambda (y) (or (y (list-of expression?)) (equal? y 'else))) z)))
+    [case-exp (key expression?) (cases (lambda (x) (map (lambda (y) (or (y (list-of expression?)) (equal? y 'else))) x)))
     												(bodies (list-of expression?))]
 
 	[void-exp]			 
