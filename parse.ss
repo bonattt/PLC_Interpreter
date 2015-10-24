@@ -23,6 +23,8 @@
 			  [(equal? (car datum) 'and) (and-exp (map parse-exp (cdr datum)))]
               [(equal? (car datum) 'set!) (parse-set! datum)]
               [(equal? (car datum) 'quote) (lit-exp (2nd datum))]
+              [(equal? (car datum) 'or) (parse-or datum)]
+              [(equal? (car datum)) 'begin (parse-begin datum)]
               [else (app-exp (parse-exp (1st datum))
                 (map parse-exp (cdr datum)))])]
         [(lit2? datum) (lit-exp datum)]
@@ -31,6 +33,10 @@
 (define parse-while
 	(lambda (datum)
 		(while-exp (parse-exp (cadr datum)) (map parse-exp (cddr datum)))))
+
+(define parse-or
+	(lambda (datum)
+		(or-exp (map parse-exp (cdr datum)))))
 
 (define parse-lambda
   (lambda (datum)

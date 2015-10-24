@@ -36,6 +36,9 @@
                  (body (list-of expression?))]
     [set!-exp  (id symbol?)
              (body expression?)]
+
+    [or-exp (body (list-of expression?))]
+
 	[void-exp]			 
     [vec-exp (id vector?)])
 

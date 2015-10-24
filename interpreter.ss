@@ -65,10 +65,12 @@
 			
 		[void-exp ()
 			(void)]
+
+		[or-exp (body) (eval-or body env)]
         
-		[else '()]
+		; [else '()]
 		;(error 'eval-exp  "Bad abstract syntax: ~s" exp)]
-      	;[else (eopl:error 'eval-exp "Bad abstract syntax: ~a" exp)]
+      	[else (eopl:error 'eval-exp "Bad abstract syntax: ~a" exp)]
 	)))
 
 ; evaluate the list of operands, putting results into a list
@@ -81,6 +83,16 @@
 				(eval-while test-exp bodies env)
 			)
 			#t)))
+
+(define eval-or
+	(lambda (body env)
+		(cond
+			[(null? body) #f]
+			[(null? (cdr body)) (eval-exp (car body) env)]
+			[else (let ([condition (eval-exp (car body) env)])
+						(if condition
+							condition
+							(eval-or (cdr body) env)))])))
 
 (define eval-in-order
       (lambda (body env)
@@ -132,7 +144,13 @@
 
 			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
 			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
+<<<<<<< Updated upstream
 			[and-exp (args) 
+=======
+
+			[or-exp (body) (or-exp (map syntax-expand body))]
+
+>>>>>>> Stashed changes
 			[else exp]
 			)))
 
