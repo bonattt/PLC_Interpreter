@@ -66,6 +66,8 @@
 		[void-exp ()
 			(void)]
 
+		[and-exp (args) (eval-and args env)]
+			
 		[or-exp (body) (eval-or body env)]
 
 		[begin-exp (body) (eval-in-order body env)]
@@ -86,6 +88,16 @@
 			)
 			#t)))
 
+(define eval-and
+	(lambda (body env)
+		(cond
+			[(null? body) #t]
+			[(null? (cdr body)) (eval-exp (car body) env)]
+			[else (let ([condition (eval-exp (car body) env)])
+						(if condition
+							(eval-or (cdr body) env)
+							#f
+						))])))
 (define eval-or
 	(lambda (body env)
 		(cond
@@ -147,9 +159,14 @@
 			[while-exp (test-exp bodies) (while-exp (syntax-expand test-exp) (map syntax-expand bodies))]
 			[app-exp (rator rands) (app-exp (syntax-expand rator) (map syntax-expand rands))]
 
+<<<<<<< HEAD
 			; [and-exp (args) 
 
+=======
+>>>>>>> 130a8e016772f503212fda5cfa8d9a164e2b1321
 			[or-exp (body) (or-exp (map syntax-expand body))]
+			
+			[and-exp (body) (and-exp (map syntax-expand body))]
 
 			[begin-exp (body) (begin-exp (map syntax-expand body))]
 
