@@ -57,9 +57,6 @@
 		[lambda-dot-exp (id arbitrary-id body)
 			(dot-closure id arbitrary-id body env)]
 			
-		[lambda-arbitrary-exp (id body)
-            (arb-closure id body env)]
-
         [lambda-arbitrary-exp (id body) (closure id body env)]
 
         [while-exp (test-exp bodies)
