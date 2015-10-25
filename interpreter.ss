@@ -166,9 +166,21 @@
 			[begin-exp (body) (begin-exp (map syntax-expand body))]
 
 			[case-exp (key cases bodies) (expand-case-helper key cases bodies)]
+			
+			[cond-exp (conditions bodies) (expand-syntax-cond condition bodies)]
 
 			[else exp]
 			)))
+			
+(define expand-syntax-cond
+	(lambda (condition bodies)
+		(cond 
+			[(null? condition) ___] ; throw an error
+			[(null? (cdr condition)) ___]
+			[(eqv? 'else  (car condition)) ___]
+			[else ___] ; 
+		)))
+			
 
 (define expand-case-helper
 	(lambda (key cases bodies)
