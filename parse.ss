@@ -10,6 +10,7 @@
 (define parse-exp         
   (lambda (datum)
       (cond
+        
         [(symbol? datum) (var-exp datum)]
         [(pair? datum)
           (cond
@@ -25,20 +26,22 @@
               [(equal? (car datum) 'quote) (lit-exp (2nd datum))]
               [(equal? (car datum) 'or) (parse-or datum)]
               [(equal? (car datum) 'begin) (parse-begin datum)]
-			  [(equal? (car datum) 'cond) (parse-cond (cdr datum))]
-             [(equal? (car datum) 'case) (parse-case datum)]
+			        [(equal? (car datum) 'cond) (parse-cond datum)]
+              [(equal? (car datum) 'case) (parse-case datum)]
 
               [else (app-exp (parse-exp (1st datum))
                 (map parse-exp (cdr datum)))])]
-        [(lit2? datum) (lit-exp datum)]
+        [(lit? datum) (lit-exp datum)]
     [else (eopl:error 'parse-exp "bad expression: ~s" datum)])))
 
 (define parse-cond
-	(lambda(data)
-		(cond-exp
-			(map parse-exp (map car data))
-			(map parse-exp (map cadr data))
-		)))
+	(lambda(datum)
+		(cond-exp (map parse-exp (map car (cdr datum))) (map parse-exp (map cadr (cdr datum))))))
+			
+
+(define cond-helper
+  (lambda (datum)
+    (if-exp (parse-exp (car datum)) (map parse-exp (cdr datum)))))
 
 (define parse-while
 	(lambda (datum)

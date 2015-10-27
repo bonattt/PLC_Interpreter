@@ -2,19 +2,18 @@
 ;; Parsed expression datatypes
 
 (define-datatype expression expression?
+  
+    [lit-exp (id lit?)]
     [var-exp (id symbol?)]
     [app-exp (rator expression?)
            (rand (list-of expression?)) ]
-	[cond-exp
-		(conditions (list-of expression?))
-		(bodies (list-of expression?))]
-
+	
     [if-exp (condition expression?)
           (body expression?)]
     [if-else-exp (condition expression?)
                (body1 expression?)
                (body2 expression?)]
-    [lit-exp (id lit2?)]
+   ; [lit-exp (id lit2?)]
     [lambda-exp
 		(id (list-of symbol?))
 		(body (list-of expression?))]
@@ -37,6 +36,10 @@
     [set!-exp  (id symbol?)
              (body expression?)]
 
+    [cond-exp
+      (conditions (list-of expression?))
+      (body (list-of expression?))]
+
     [or-exp (body (list-of expression?))]
     [and-exp (args (list-of expression?))]
 
@@ -52,11 +55,9 @@
 	[void-exp]			 
     [vec-exp (id vector?)])
 
-(define lit2? 
+(define lit? 
   (lambda (x)
-      (ormap 
-       (lambda (pred) (pred x))
-       (list number? vector? boolean? symbol? string? pair? null?))))
+      (or (number? x) (vector? x) (boolean? x) (symbol? x) (string? x) (pair? x) (null? x))))
 
 
 	
