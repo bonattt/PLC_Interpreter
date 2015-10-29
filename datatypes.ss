@@ -49,8 +49,11 @@
 
     [begin-exp (body (list-of expression?))]
 
-    [case-exp (key expression?) (cases (lambda (x) (map (lambda (y) (or (y (list-of expression?)) (equal? y 'else))) x)))
-    												(bodies (list-of expression?))]
+    [case-exp
+		(key expression?)
+		(cases (lambda (x) (map (lambda (y) (or (y (list-of expression?)) (equal? y 'else))) x)))
+    	(bodies (list-of expression?))
+		]
 
 	[void-exp]			 
     [vec-exp (id vector?)])

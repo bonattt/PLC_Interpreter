@@ -14,26 +14,24 @@
         [(symbol? datum) (var-exp datum)]
         [(pair? datum)
           (cond
-              [(not (list? datum)) (eopl:error 'parse-exp "The expression ~s is not a list" datum)]
-              [(equal? (car datum) 'lambda) (parse-lambda datum)]
-              [(equal? (car datum) 'while) (parse-while datum)]
-              [(equal? (car datum) 'if) (parse-if datum)]
-              [(equal? (car datum) 'let) (parse-let datum)]
-              [(equal? (car datum) 'let*) (parse-let* datum)]
-              [(equal? (car datum) 'letrec) (parse-letrec datum)]
-			  [(equal? (car datum) 'and) (and-exp (map parse-exp (cdr datum)))]
-              [(equal? (car datum) 'set!) (parse-set! datum)]
-              [(equal? (car datum) 'quote) (lit-exp (2nd datum))]
-              [(equal? (car datum) 'or) (parse-or datum)]
-              [(equal? (car datum) 'begin) (parse-begin datum)]
+				[(not (list? datum)) (eopl:error 'parse-exp "The expression ~s is not a list" datum)]
+				[(equal? (car datum) 'lambda) (parse-lambda datum)]
+				[(equal? (car datum) 'while) (parse-while datum)]
+				[(equal? (car datum) 'if) (parse-if datum)]
+				[(equal? (car datum) 'let) (parse-let datum)]
+				[(equal? (car datum) 'let*) (parse-let* datum)]
+				[(equal? (car datum) 'letrec) (parse-letrec datum)]
+				[(equal? (car datum) 'and) (and-exp (map parse-exp (cdr datum)))]
+				[(equal? (car datum) 'set!) (parse-set! datum)]
+				[(equal? (car datum) 'quote) (lit-exp (2nd datum))]
+				[(equal? (car datum) 'or) (parse-or datum)]
+				[(equal? (car datum) 'begin) (parse-begin datum)]
 			        [(equal? (car datum) 'cond) (parse-cond datum)]
-              [(equal? (car datum) 'case) (parse-case datum)]
-
-              [else (app-exp (parse-exp (1st datum))
-                (map parse-exp (cdr datum)))])]
-        [(lit? datum) (lit-exp datum)]
-    [else (eopl:error 'parse-exp "bad expression: ~s" datum)])))
-
+				[(equal? (car datum) 'case) (parse-case datum)]
+				[else (app-exp (parse-exp (1st datum))
+					(map parse-exp (cdr datum)))])]
+				[(lit? datum) (lit-exp datum)]
+				[else (eopl:error 'parse-exp "bad expression: ~s" datum)])))
 (define parse-cond
 	(lambda(datum)
 		(cond-exp (map parse-exp (map car (cdr datum))) (map parse-exp (map cadr (cdr datum))))))
@@ -49,12 +47,16 @@
 
 (define parse-case
 	(lambda (datum)
-		(case-exp (parse-exp (cadr datum))
-			(map (lambda (x)
-			 		 (if (list? x) 
+		(case-exp 
+			(parse-exp (cadr datum))
+			(map 
+				(lambda (x)
+			 		(if (list? x) 
 			 		 	(map parse-exp x) 
 			 		 	x)) 
-			(map car (cddr datum))) (map parse-exp (map cadr (cddr datum))))))
+				(map car (cddr datum)))
+			(map parse-exp (map cadr (cddr datum)))
+		)))
 
 (define parse-begin
 	(lambda (datum)
@@ -157,29 +159,31 @@
 (define unparse-exp
   (lambda (datum)
     (cases expression datum
-	  [lambda-dot-exp (id arbitrary-id body) (cons 'lambda (cons (fold-right cons arbitrary-id id) (map unparse-exp body)))]
-	  [lambda-arbitrary-exp (id body) (cons 'lambda (cons id (map unparse-exp body)))]
-      [var-exp (var) var]
-	  [while-exp (test-exp bodies) (cons 'while (cons (unparse-exp test-exp) (map unparse-exp bodies)))]
-      [lambda-exp (id body) (cons* 'lambda id (map unparse-exp body))]
-      [if-exp (condition body) (list 'if (unparse-exp condition) (unparse-exp body))]
-      [if-else-exp (condition body1 body2) (list 'if (unparse-exp condition) (unparse-exp body1) (unparse-exp body2))]
-      [let-exp (vars vals body) (cons* 'let (unparse-let vars vals '()) (map unparse-exp body))]
-      [let*-exp (vars vals body) (cons* 'let* (unparse-let vars vals '()) (map unparse-exp body))]
-      [letrec-exp (vars vals body) (cons* 'letrec (unparse-let vars vals '()) (map unparse-exp body))]
-      [named-let-exp (id vars vals body) (cons* 'let id (unparse-let vars vals '()) (map unparse-exp body))]
-      [set!-exp (id body) (cons* 'set! id (unparse-exp body))]
-      [lit-exp (id) id]
-      [vec-exp (id) id]
-	  [void-exp () (void)]
-	  [and-exp (args) (cons 'and (map unparse-exp args))]
-	  [cond-exp (conditions bodies)
-		(cons 'cond (unparse-cond-helper conditions bodies '()))]
-	  ;[or-exp (body) "<unimplemented>"]
-	  ;[begin-exp (body) "<unimplemented>"]
-      [app-exp (rator rand)
-        (cons*
-          (unparse-exp rator) (map unparse-exp rand))])))
+		[lambda-dot-exp (id arbitrary-id body) (cons 'lambda (cons (fold-right cons arbitrary-id id) (map unparse-exp body)))]
+		[lambda-arbitrary-exp (id body) (cons 'lambda (cons id (map unparse-exp body)))]
+		[var-exp (var) var]
+		[while-exp (test-exp bodies) (cons 'while (cons (unparse-exp test-exp) (map unparse-exp bodies)))]
+		[lambda-exp (id body) (cons* 'lambda id (map unparse-exp body))]
+		[if-exp (condition body) (list 'if (unparse-exp condition) (unparse-exp body))]
+		[if-else-exp (condition body1 body2) (list 'if (unparse-exp condition) (unparse-exp body1) (unparse-exp body2))]
+		[let-exp (vars vals body) (cons* 'let (unparse-let vars vals '()) (map unparse-exp body))]
+		[let*-exp (vars vals body) (cons* 'let* (unparse-let vars vals '()) (map unparse-exp body))]
+		[letrec-exp (vars vals body) (cons* 'letrec (unparse-let vars vals '()) (map unparse-exp body))]
+		[named-let-exp (id vars vals body) (cons* 'let id (unparse-let vars vals '()) (map unparse-exp body))]
+		[set!-exp (id body) (cons* 'set! id (unparse-exp body))]
+		[lit-exp (id) id]
+		[vec-exp (id) id]
+		[void-exp () (void)]
+		[and-exp (args) (cons 'and (map unparse-exp args))]
+		[cond-exp (conditions bodies)
+			(cons 'cond (unparse-cond-helper conditions bodies '()))]
+		[or-exp (body) "<unimplemented>"]
+		[begin-exp (body) "<unimplemented>"]
+		[case-exp (key cases bodies) "<unimplemented>"]
+		[app-exp (rator rand)
+			(cons*
+				(unparse-exp rator) (map unparse-exp rand))]
+	)))
 
 (define unparse-cond-helper
 	(lambda (conditions bodies return)
