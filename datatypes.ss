@@ -5,10 +5,11 @@
   
     [lit-exp (id lit?)]
     [var-exp (id symbol?)]
-    [app-exp (rator expression?)
-           (rand (list-of expression?)) ]
-	
-    [if-exp (condition expression?)
+    [app-exp 
+		(rator expression?)
+		(rand (list-of expression?))
+		]
+	[if-exp (condition expression?)
           (body expression?)]
     [if-else-exp (condition expression?)
                (body1 expression?)
