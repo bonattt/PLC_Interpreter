@@ -26,16 +26,25 @@
 		(body (list-of expression?))]
     [let-exp (vars (list-of symbol?)) (vals (list-of expression?))
            (body (list-of expression?)) ]
+    [named-let-exp
+		(name symbol?)
+		(vars (list-of symbol?))
+		(vals (list-of expression?))
+		(bodies (list-of expression?))
+		]
     [let*-exp (vars (list-of symbol?)) (vals (list-of expression?))
             (body (list-of expression?))]
-    [letrec-exp (vars (list-of symbol?)) (vals (list-of expression?))
-              (body (list-of expression?))]
-    [named-let-exp (id symbol?)
-                 (vars (list-of symbol?)) (vals (list-of expression?))
-                 (body (list-of expression?))]
+;    [letrec-exp (vars (list-of symbol?)) (vals (list-of expression?))
+;              (body (list-of expression?))]
+	[letrec-exp
+		(proc-names (list-of symbol?))
+		(idss (list-of (list-of symbol?)))	
+		(bodies (list-of expression?))
+		(letrec-bodies (list-of expression?))
+		]
     [set!-exp  (id symbol?)
-             (body expression?)]
-
+		(body expression?)
+		]
     [cond-exp
       (conditions (list-of expression?))
       (body (list-of expression?))]
@@ -59,11 +68,10 @@
     [vec-exp (id vector?)])
 
 (define lit? 
-  (lambda (x)
-      (or (number? x) (vector? x) (boolean? x) (symbol? x) (string? x) (pair? x) (null? x))))
+	(lambda (x)
+		(or (number? x) (vector? x) (boolean? x) (symbol? x) (string? x) (pair? x) (null? x))
+	))
 
-
-	
 ; datatype for procedures.  At first there is only one
 ; kind of procedure, but more kinds will be added later.
 
@@ -90,11 +98,18 @@
   (lambda (x) #t))
 
 (define-datatype environment environment?
-  (empty-env-record)
-  (extended-env-record
-   (syms (list-of symbol?))
-   (vals (list-of scheme-value?))
-   (env environment?)))
+	[empty-env-record]
+	[extended-env-record
+		(syms (list-of symbol?))
+		(vals (list-of scheme-value?))
+		(env environment?)]
+	[recursively-extended-env-record
+		(proc-names (list-of symbol?))
+		(idss (list-of (list-of symbol?)))
+		(bodies (list-of expression?))
+		(env environment?)]
+)
+	
 
 
 
